@@ -9,8 +9,8 @@ from parser_app.tasks import create_task
 def task(request):
     if request.method == 'POST':
         if "type" in request.data:
-            category_name = request.data["type"]
-            task = create_task.delay(category_name)  # create celery task
+            themes = request.data["type"]
+            task = create_task.delay(themes)  # create celery task
             return Response({"message": "Create task", "task_id": task.id, "data": request.data})
         else:
             return Response({"message": "Error, not found 'type' in POST request"})

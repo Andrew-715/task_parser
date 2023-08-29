@@ -4,9 +4,9 @@ from django.db import models
 class BaseTask(models.Model):
     """ Celery task info"""
     themes = models.CharField(max_length=250)
-    count_solution = models.IntegerField(max_length=10)
+    count_solution = models.IntegerField()
     name_and_number = models.CharField(max_length=250)
-    complexity_task = models.IntegerField(max_length=10)
+    complexity_task = models.IntegerField()
     is_success = models.BooleanField(default=False)
 
     created_at = models.DateTimeField(auto_now_add=True)
