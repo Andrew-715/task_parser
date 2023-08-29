@@ -16,7 +16,7 @@ def parse_data(celery_task_id: str, themes: str):
     new_task.save()
     try:
         response = requests.get(
-            f"https://codeforces.com/problemset?order=BY_SOLVED_DESC/{themes}/"
+            f"https://codeforces.com/problemset?order=BY_SOLVED_DESC&tags={themes}"
         )
         if response.status_code == 200:
             tree = etree.HTML(response.content)
