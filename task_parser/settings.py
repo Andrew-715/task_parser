@@ -1,5 +1,7 @@
+import os
 from pathlib import Path
 import environ
+
 
 env = environ.Env()
 
@@ -97,3 +99,7 @@ STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'static'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CELERY_BROKER_URL = os.environ.get("CELERY_BROKER", "redis://redis:6379/0")
+CELERY_RESULT_BACKEND = os.environ.get("CELERY_BROKER", "redis://redis:6379/0")
+CELERY_IMPORTS = ("parser_app.celery",)

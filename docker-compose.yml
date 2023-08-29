@@ -39,6 +39,26 @@ services:
       - ./task_parser/static:/var/www/html/static
       - ./task_parser/nginx_conf/:/etc/nginx/conf.d
 
+  celery:
+    build: ./
+    command: celery -A parser_app worker  --loglevel=info
+    volumes:
+      - ./task_parser:/usr/src/app
+    env_file:
+      - .env
+    environment:
+      # environment variables declared in the environment section override env_file
+      - DEBUG=True
+      - DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]
+      - CELERY_BROKER=redis://redis:6379/0
+      - CELERY_BACKEND=redis://redis:6379/0
+    depends_on:
+      - django
+      - redis
+
+  redis:
+    image: redis:5-alpine
+
 volumes:
     pg_data:
     static:
