@@ -1,0 +1,44 @@
+version: '3.9'
+
+services:
+  django:
+    build: ./ # path to Dockerfile
+    command: sh -c "
+      python manage.py makemigrations
+      && python manage.py migrate  
+      && gunicorn --bind 0.0.0.0:8000 core_app.wsgi"
+    volumes:
+      - ./task_parser:/task_parser
+      - ./task_parser/static:/task_parser/static
+    expose:
+      - 8000
+    env_file:
+      - .env
+
+  db:
+    image: postgres:15.1-alpine
+    restart: always
+    volumes:
+      - pg_data:/var/lib/postgresql/data/
+    expose:
+      - 5432
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+
+  nginx:
+    image: nginx:1.19.8-alpine
+    depends_on:
+      - django
+    ports:
+      - "80:80"
+    volumes:
+      - ./task_parser/static:/var/www/html/static
+      - ./task_parser/nginx_conf/:/etc/nginx/conf.d
+
+volumes:
+    pg_data:
+    static:
